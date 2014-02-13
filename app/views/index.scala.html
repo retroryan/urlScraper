@@ -1,7 +1,18 @@
 @(message: String)
 
-@main("Welcome to Play") {
+@main("Welcome to URL Scraper") {
 
-    @play20.welcome(message)
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/index.js")'></script>
+    <script type='text/javascript' src='@routes.Assets.at("javascripts/content.js")'></script>
+
+    <div class="msg-center">
+
+    </div>
+    </pr></pr>
+    <label for="message">Add URL:</label>
+    <input id="scrapeUrl" type="text" value="https://www.google.com/#q=scala"/>
+    <br/>
+    <input type="submit" value="AddUrl" id="AddUrlBtn"/>
+
 
 }
