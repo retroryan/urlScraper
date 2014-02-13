@@ -42,15 +42,15 @@ class ConnectionWorker extends Actor with ActorLogging {
     val urlContent = WS.url(url).get
     urlContent.map {
       htmlContent =>
-        println(htmlContent.body.take(500))
+        println(s"preview of html content -- ${htmlContent.body.take(500)}")
 
         //regex not working yet
-        val HrefRegex.LinkRegex(one,two) = htmlContent
-        val HrefRegex.UrlRegex(_,nextUrl) = one
-        println(s"one=$one   two=$two   nextUrl=$nextUrl")  }
-
+        //val HrefRegex.LinkRegex(one, two) = htmlContent
+        //println(s"one=$one   two=$two ")
+        //val HrefRegex.UrlRegex(_, nextUrl) = one
+        //println(s"nextUrl=$nextUrl")
+    }
   }
-
 }
 
 object ConnectionWorker {
