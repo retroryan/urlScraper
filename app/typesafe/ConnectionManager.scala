@@ -28,14 +28,14 @@ class ConnectionManager extends Actor with ActorLogging {
 
 object ConnectionManager {
 
-  case class SendWork(work: Work)
+  case class SendWork(work: ConnectionWorkRequest)
   case class JobFailed(reason: String)
 
   private sealed trait WorkerStatus
 
   private case object Idle extends WorkerStatus
 
-  private case class Busy(work: Work, deadline: Deadline) extends WorkerStatus
+  private case class Busy(work: ConnectionWorkRequest, deadline: Deadline) extends WorkerStatus
 
   private case class WorkerState(ref: ActorRef, status: WorkerStatus)
 
