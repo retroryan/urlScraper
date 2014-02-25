@@ -10,6 +10,7 @@ import play.api.Play.current
 import typesafe.ConnectionWorkRequest
 import typesafe.ConnectionManager.SendWork
 import java.util.concurrent.atomic.AtomicInteger
+import play.api.libs.concurrent.Akka
 
 case class Message(value: String)
 
@@ -23,6 +24,14 @@ object UrlController extends Controller {
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
   }
+
+
+  def testEcho = Action {
+
+    val echoActorRef = Akka.system
+    Ok(views.html.index("Your new application is ready."))
+  }
+
 
   def getMessage = Action {
     Ok(Json.toJson(Message("Hello from Whatever!")))

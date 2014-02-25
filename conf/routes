@@ -3,6 +3,7 @@
 # ~~~~
 
 GET         /                                 controllers.UrlController.index()
+GET         /testEcho                         controllers.UrlController.testEcho()
 GET         /message                          controllers.UrlController.getMessage()
 GET         /assets/javascripts/routes        controllers.UrlController.javascriptRoutes()
 
