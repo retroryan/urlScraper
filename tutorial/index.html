@@ -1,0 +1,49 @@
+<html>
+<head>
+    <title>Tweetmap Workshop - Activator Template</title>
+</head>
+<body>
+    <div>
+        <p>This URL Scraping sample will show some of the basics of Akka Clustering and how to create a supervisor that runs separately for monitoring the workload.
+            This is different from the Akka Cluster sample that shows the nodes pulling work.  Instead a supervisor is used to distribute the work to available Akka Cluster nodes.
+            The work is distributed based on the workload of the individual nodes.
+        </p>
+
+        <p>
+            The sample can be either run as a stand-alone akka service or a play application.  It requires starting up a couple of nodes first by running:
+
+            sbt "run-main typesafe.RunConnectionServers 2551"
+            sbt "run-main typesafe.RunConnectionServers 2552"
+
+            That will start 2 cluster nodes on different ports.  Akka clustering requires 2 seed nodes (specified in the application.conf) and those are defined to be on ports 2551 and 2552.  When deployed into production the host would have to be changed in the conf file.
+
+            Then all subsequent nodes can just be started with:
+
+            sbt "run-main typesafe.RunConnectionServers"
+
+            Next the client can be run as a stand-alone client (which simulates requests) with:
+            sbt "run-main typesafe.RunConnectionClients"
+
+            or as a Play application with the standard play run
+        </p>
+
+    </div>
+
+    <div>
+        <h2>Overview</h2>
+
+        <p>A quick walk through of how things work.    The summary of the flow of a work request is:
+
+            ConnectionClient  ->  ClusterManager  ->  ConnectionServiceSingleton  -> ConnectionManager -> ConnectionWorker
+
+            There is a Play plugin in Actors.scala that starts the initial actors and joins the cluster.  The primary actor that the client then interacts with is ConnectionClient to which it sends work requests.  ConnectionClient forwards the requests to the ClusterManager.
+
+            Each server node starts 2 actors (see RunConnectionServers#startConnectionServers)  .  First it starts the ConnectionServiceSingleton.  Because it is started as a Cluster Singleton it only gets run on one node - the oldest node in the cluster.  And then each server starts a ClusterManager.  The ClusterManager keeps track of every other node in the cluster and sends work requests to the node running the ConnectionServiceSingleton.  The ClusterManager then accepts work requests from the ConnectionClient.  Because the ClusterManager is running on every node it doesn't matter where the Client sends work requests.  What the Client does then is randomly pick a node to send the work request to.  The ClusterManager just receives the request and forwards those requests onto the ConnectionServiceSingleton.
+
+            The actual routing of the requests between nodes happens in ConnectionServiceSingleton.  It creates a router that routes the requests between all of the nodes in the cluster.  The router is defined to use ConnectionManager to route requests to and is configured in application.conf as /singleton/connectionService/connectionManagerRouter.  Currently it is balancing the requests between nodes using consistent hashing because that works best for development.  Simply changing the router configuration in application.conf to adaptive and the routing will route based on cluster metrics - like cpu, heap load, etc.
+        </p>
+    </div>
+
+
+</body>
+</html>
