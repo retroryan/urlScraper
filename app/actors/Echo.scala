@@ -4,6 +4,9 @@ import akka.actor.Actor
 import actors.Echo.{Response, EchoMsg}
 import scala.concurrent.Future
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
+
 object Echo {
   case class EchoMsg(msg:String)
   case class Response(msg:String)

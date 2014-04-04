@@ -20,6 +20,7 @@ import akka.actor.RootActorPath
 import akka.cluster.ClusterEvent.CurrentClusterState
 import akka.cluster.ClusterEvent.UnreachableMember
 
+
 class ConnectionClient(servicePath: String, simulateWork:Boolean = false) extends Actor {
 
   val cluster = Cluster(context.system)

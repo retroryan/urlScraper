@@ -31,7 +31,7 @@ class ConnectionWorker extends Actor with ActorLogging {
     case SendWork(work) =>
       println(s"received work ${work.url}")
       scrapeUrl(work.url)
-      scheduler.schedule(0.seconds, 5.seconds, self, ConnectionWorker.Tick(work))
+      //scheduler.schedule(0.seconds, 120.seconds, self, ConnectionWorker.Tick(work))
 
     case Tick(work) =>
       n += 1
@@ -42,7 +42,8 @@ class ConnectionWorker extends Actor with ActorLogging {
     val urlContent = WS.url(url).get
     urlContent.map {
       htmlContent =>
-        println(s"preview of html content -- ${htmlContent.body.take(500)}")
+        //println(s"preview of html content -- ${htmlContent.body.take(500)}")
+        println(s"scraped $url")
 
         //regex not working yet
         //val HrefRegex.LinkRegex(one, two) = htmlContent
