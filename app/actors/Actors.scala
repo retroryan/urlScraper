@@ -5,7 +5,7 @@ import play.api.libs.concurrent.Akka
 import akka.cluster.Cluster
 import java.net.URL
 import akka.actor.IOManager.Settings
-import typesafe.RunConnectionServers
+import typesafe.{ClusterSingletonProxy, RunConnectionServers}
 import akka.actor.Props
 
 /**
@@ -19,7 +19,7 @@ object Actors {
   /**
    * Get the connection client.
    */
-  def connectionClient(implicit app: Application) = actors.connectionClient
+  def clusterProxy(implicit app: Application) = actors.clusterProxy
 }
 
 /**
@@ -35,5 +35,5 @@ class Actors(app: Application) extends Plugin {
     RunConnectionServers.startConnectionServers(system)
   }
 
-  private lazy val connectionClient = system.actorOf(ConnectionClient.props("/user/clusterManager"), "client")
+  private lazy val clusterProxy = system.actorOf(Props[ClusterSingletonProxy], name = "clusterProxy")
 }

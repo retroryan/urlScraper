@@ -45,7 +45,10 @@ object UrlController extends Controller {
       val result = optScrapeUrl match {
         case JsSuccess(scrapeUrl, path) =>
           val work = ConnectionWorkRequest(workIdCount.getAndIncrement, scrapeUrl)
-          Actors.connectionClient ! SendWork(work)
+
+          val clusterSingletonProxy = Akka.system.actorSelection("/user/clusterSingletonProxy")
+          clusterSingletonProxy ! SendWork(work)
+
           Logger.debug(s"received scrapeUrl=$scrapeUrl")
           Ok(Json.toJson(Message(s"Added URL $scrapeUrl")))
         case _ => BadRequest("Invalid JSON")

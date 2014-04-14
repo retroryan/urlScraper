@@ -4,11 +4,8 @@ import com.typesafe.config.ConfigFactory
 import akka.actor._
 
 import akka.contrib.pattern.ClusterSingletonManager
-import akka.cluster.{MemberStatus, Cluster}
-import scala.Some
-import akka.cluster.ClusterEvent.{MemberUp, CurrentClusterState, UnreachableMember, MemberEvent}
+import akka.cluster.Cluster
 
-import typesafe.ConnectionManager.{JobFailed, SendWork}
 import actors.ConnectionClient
 
 object RunConnectionServers {
@@ -25,7 +22,7 @@ object RunConnectionServers {
     }
 
     //#create cluster manager
-    system.actorOf(Props[ClusterManager], name = "clusterManager")
+    system.actorOf(Props[ClusterSingletonProxy], name = "clusterSingletonProxy")
   }
 
   def main(args: Array[String]): Unit = {
